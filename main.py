@@ -9,8 +9,8 @@ from PIL import Image
 import numpy as np
 
 
-# rag = ColPaliModel.from_pretrained('vidore/colpali')
-
+colpali_model = ColPaliModel.from_pretrained('vidore/colpali')
+print(colpali_model.doc_id_to_metadata)
 model = Qwen2VLForConditionalGeneration.from_pretrained("Qwen/Qwen2-VL-2B-Instruct", torch_dtype=torch.bfloat16).eval()
 processor = AutoProcessor.from_pretrained("Qwen/Qwen2-VL-2B-Instruct", trust_remote_code=True)
 messages = [
