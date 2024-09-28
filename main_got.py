@@ -21,7 +21,7 @@ model = AutoModel.from_pretrained('ucaslcl/GOT-OCR2_0',
 
 
 # input your test image
-image_file = 'template.jpg'
+image_file = 'docs/template.jpg'
 
 res = model.chat(tokenizer, image_file, ocr_type='ocr')
 

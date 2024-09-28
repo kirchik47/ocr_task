@@ -29,7 +29,7 @@ messages = [
 text = processor.apply_chat_template(
     messages, tokenize=False, add_generation_prompt=True
 )
-img = Image.open('hindi_template.jpg')
+img = Image.open('docs/hindi_template.jpg')
 inputs = processor(
     text=text,
     images=img,
