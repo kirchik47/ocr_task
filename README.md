@@ -7,7 +7,7 @@ I've chosen to use Kaggle Notebook for this since it provides powerful GPU for l
 During deployment to streamlit on huggingface space encountered a problem with '\left' strings which were problematic escape sequences due to '\'. Cloned model repository and directly changed the code. Also handled cpu compatibility issues and other minor bugs.
 
 WARNING: 
-Application works pretty slow on CPU, so if you upload for example resume, it will be proceeded for approximately 10 minutes. Didn't test it on CUDA because don't have it.
+Application works pretty slow on CPU, so if you upload for example resume, it will be proceeded for approximately 10 minutes. Didn't test it on CUDA because probably huggingface host does not have it.
 
 For fine-tuning used:
 
