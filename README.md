@@ -9,6 +9,17 @@ During deployment to streamlit on huggingface space encountered a problem with '
 WARNING: 
 Application works pretty slow on CPU, so if you upload for example resume, it will be proceeded for approximately 10 minutes. Didn't test it on CUDA because don't have it.
 
+For training used:
+!git clone https://github.com/modelscope/ms-swift.git
+%cd ms-swift
+!pip install -e .[llm]
+
+!swift sft \
+--model_type got-ocr2 \
+--model_id_or_path stepfun-ai/GOT-OCR2_0 \
+--sft_type lora \
+--dataset /kaggle/input/json-images/dataset.json
+
 Dataset used for fine-tuning:
 https://www.kaggle.com/datasets/prathmeshzade/hindi-ocr-synthetic-line-image-text-pair
 Application link:
