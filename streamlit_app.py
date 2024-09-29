@@ -1,10 +1,8 @@
 import streamlit as st
 from main_got import extract_text
 import re
-from replacer import replace_escape_sequences
 
 
-replace_escape_sequences('\\left')
 # Streamlit UI
 st.title("OCR and Document Search Web App")
 
