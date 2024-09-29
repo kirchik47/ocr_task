@@ -9,7 +9,8 @@ During deployment to streamlit on huggingface space encountered a problem with '
 WARNING: 
 Application works pretty slow on CPU, so if you upload for example resume, it will be proceeded for approximately 10 minutes. Didn't test it on CUDA because don't have it.
 
-For training used:
+For fine-tuning used:
+
 !git clone https://github.com/modelscope/ms-swift.git
 %cd ms-swift
 !pip install -e .[llm]
