@@ -18,6 +18,11 @@ DEFAULT_IMAGE_TOKEN = "<image>"
 DEFAULT_IMAGE_PATCH_TOKEN = '<imgpad>'
 DEFAULT_IM_START_TOKEN = '<img>'
 DEFAULT_IM_END_TOKEN = '</img>'
+cuda_is_available = torch.cuda.is_available()
+if cuda_is_available:
+    device_type = torch.device('cuda').type
+else:
+    device_type = torch.device('cpu').type
 
 from enum import auto, Enum
 class SeparatorStyle(Enum):
@@ -469,7 +474,7 @@ class GOTQwenForCausalLM(Qwen2ForCausalLM):
             config.im_start_token, config.im_end_token = 151857, 151858
 
     def load_image(self, image_file):
-        if image_file.startswith('http') or image_file.startswith('https'):
+        if isinstance(image_file, str) and (image_file.startswith('http') or image_file.startswith('https')):
             response = requests.get(image_file)
             image = Image.open(BytesIO(response.content)).convert('RGB')
         else:
@@ -496,7 +501,7 @@ class GOTQwenForCausalLM(Qwen2ForCausalLM):
         image_token_len = 256
 
         if gradio_input:
-            image = image_file.copy()
+            image = image_file
         else:
             image = self.load_image(image_file)
 
@@ -557,8 +562,11 @@ class GOTQwenForCausalLM(Qwen2ForCausalLM):
         inputs = tokenizer([prompt])
 
         image_tensor_1 = image_processor_high(image)
-
-        input_ids = torch.as_tensor(inputs.input_ids).cuda()
+        
+        input_ids = torch.as_tensor(inputs.input_ids)
+        
+        if cuda_is_available:
+            input_ids = input_ids.cuda()
 
         stop_str = conv.sep if conv.sep_style != SeparatorStyle.TWO else conv.sep2
         keywords = [stop_str]
@@ -566,7 +574,7 @@ class GOTQwenForCausalLM(Qwen2ForCausalLM):
         streamer = TextStreamer(tokenizer, skip_prompt=True, skip_special_tokens=True)
 
         if stream_flag:
-            with torch.autocast("cuda", dtype=torch.bfloat16):
+            with torch.autocast(device_type, dtype=torch.bfloat16):
                 output_ids = self.generate(
                     input_ids,
                     images=[image_tensor_1.unsqueeze(0).half().cuda()],
@@ -578,10 +586,10 @@ class GOTQwenForCausalLM(Qwen2ForCausalLM):
                     stopping_criteria=[stopping_criteria]
                     )
         else:
-            with torch.autocast("cuda", dtype=torch.bfloat16):
+            with torch.autocast(device_type, dtype=torch.bfloat16):
                 output_ids = self.generate(
                     input_ids,
-                    images=[image_tensor_1.unsqueeze(0).half().cuda()],
+                    images=[image_tensor_1.unsqueeze(0).half().cuda()] if cuda_is_available else [image_tensor_1.unsqueeze(0).half()],
                     do_sample=False,
                     num_beams = 1,
                     no_repeat_ngram_size = 20,

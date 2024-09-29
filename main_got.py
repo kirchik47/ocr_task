@@ -19,7 +19,7 @@ def extract_text(image_path):
                                                             # and provides safe deserialization unlike pickle-based one
                                     pad_token_id=tokenizer.eos_token_id, # Set the pad token from tokenizer
             )
-
+    model.to(device)
     image_file = image_path
     # Extract text
     res = model.chat(tokenizer, image_file, ocr_type='ocr')
